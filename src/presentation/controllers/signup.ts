@@ -4,11 +4,12 @@ import { badRequest } from '@/presentation/helpers'
 
 export class SignUpController {
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-    if (!httpRequest.body.name) {
-      return badRequest(new MissingParamsError('name'))
-    }
-    if (!httpRequest.body.email) {
-      return badRequest(new MissingParamsError('email'))
+    const { body } = httpRequest
+    const requiredFields = ['name', 'email']
+    for (const field of requiredFields) {
+      if (!body[field]) {
+        return badRequest(new MissingParamsError(field))
+      }
     }
     return {
       statusCode: 200,
