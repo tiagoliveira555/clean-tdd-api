@@ -2,19 +2,22 @@ import { SignUpController } from '@/presentation/controllers/signup'
 import { MissingParamsError, InvalidParamError, ServerError } from '@/presentation/errors'
 import { EmailValidator } from '@/presentation/protocols'
 
+const makeEmailValidator = (): EmailValidator => {
+  class EmailValidatorStub implements EmailValidator {
+    isValid (email: string): boolean {
+      return true
+    }
+  }
+  return new EmailValidatorStub()
+}
+
 type SutTypes = {
   sut: SignUpController
   emailValidatorStub: EmailValidator
 }
 
 const makeSut = (): SutTypes => {
-  class EmailValidatorStub implements EmailValidator {
-    isValid (email: string): boolean {
-      return true
-    }
-  }
-
-  const emailValidatorStub = new EmailValidatorStub()
+  const emailValidatorStub = makeEmailValidator()
   const sut = new SignUpController(emailValidatorStub)
   return {
     sut,
