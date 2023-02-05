@@ -1,8 +1,12 @@
-import { HttpRequest, HttpResponse, Controller } from '@/presentation/protocols'
-import { MissingParamsError } from '@/presentation/errrors'
+import { HttpRequest, HttpResponse, Controller, EmailValidator } from '@/presentation/protocols'
+import { InvalidParamError, MissingParamsError } from '@/presentation/errrors'
 import { badRequest } from '@/presentation/helpers'
 
 export class SignUpController implements Controller {
+  constructor (
+    private readonly emailValidator: EmailValidator
+  ) {}
+
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     const { body } = httpRequest
     const requiredFields = ['name', 'email', 'password', 'passwordConfirmation']
@@ -10,6 +14,10 @@ export class SignUpController implements Controller {
       if (!body[field]) {
         return badRequest(new MissingParamsError(field))
       }
+    }
+    const isValid = this.emailValidator.isValid(body.email)
+    if (!isValid) {
+      return badRequest(new InvalidParamError('email'))
     }
     return {
       statusCode: 200,
