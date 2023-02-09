@@ -1,0 +1,18 @@
+import { AddAccountRepository } from '@/data/protocols/add-account-repository'
+import { AccountModel } from '@/domain/models'
+import { AddAccountModel } from '@/domain/usecases'
+import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper'
+
+export class AccountMongoRepository implements AddAccountRepository {
+  async add (data: AddAccountModel): Promise<AccountModel> {
+    const accountCollection = MongoHelper.getCollection('accounts')
+    const result = await accountCollection.insertOne(data)
+    const account = await accountCollection.findOne(result.insertedId)
+    return {
+      id: account._id.toHexString(),
+      name: account.name,
+      email: account.email,
+      password: account.password
+    }
+  }
+}
