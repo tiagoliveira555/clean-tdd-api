@@ -25,7 +25,7 @@ export class LoginController implements Controller {
       }
       await this.authentication.auth(email, password)
     } catch (error) {
-      serverError(error)
+      return serverError(error)
     }
   }
 }
