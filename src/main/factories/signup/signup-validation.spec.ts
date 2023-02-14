@@ -1,5 +1,6 @@
 import { makeSignUpValidation } from './signup-validation'
-import { Validation, ValidationComposite, RequiredFieldValidation, CompareFieldsValidation } from '@/presentation/helpers/validators'
+import { Validation } from '@/presentation/protocols'
+import { ValidationComposite, RequiredFieldValidation, CompareFieldsValidation } from '@/presentation/helpers/validators'
 import { EmailValidation } from '@/presentation/helpers/validators/email-validation'
 import { EmailValidator } from '@/presentation/protocols/email-validator'
 
