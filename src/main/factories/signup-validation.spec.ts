@@ -1,16 +1,16 @@
 import { makeSignUpValidation } from './signup-validation'
-import { Validation, ValidationComposite } from '@/presentation/helpers/validators'
-import { RequiredFieldValidation } from '@/presentation/helpers/validators/required-field-validation'
+import { Validation, ValidationComposite, RequiredFieldValidation, CompareFieldsValidation } from '@/presentation/helpers/validators'
 
-jest.mock('@/presentation/helpers/validators')
+jest.mock('@/presentation/helpers/validators/validation-composite')
 
 describe('SignUpValidation Factory', () => {
   it('should call ValidationComposite with all validations', () => {
     makeSignUpValidation()
-    const validators: Validation[] = []
+    const validations: Validation[] = []
     for (const field of ['name', 'email', 'password', 'passwordConfirmation']) {
-      validators.push(new RequiredFieldValidation(field))
+      validations.push(new RequiredFieldValidation(field))
     }
-    expect(ValidationComposite).toHaveBeenCalledWith(validators)
+    validations.push(new CompareFieldsValidation('password', 'passwordConfirmation'))
+    expect(ValidationComposite).toHaveBeenCalledWith(validations)
   })
 })
