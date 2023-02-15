@@ -1,21 +1,28 @@
 import { DbAuthentication } from './db-authentication'
 import { LoadAccountByEmailRepository } from '@/data/protocols/load-account-by-email-repository'
 import { AccountModel } from '@/domain/models'
+import { AuthenticationModel } from '@/domain/usecases/authentication'
 
 const makeLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
   class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
     async load (email: string): Promise<AccountModel> {
-      const accountModel: AccountModel = {
-        id: 'any_id',
-        name: 'any_name',
-        email: 'any_email',
-        password: 'any_password'
-      }
-      return await Promise.resolve(accountModel)
+      return await Promise.resolve(makeFakeAccount())
     }
   }
   return new LoadAccountByEmailRepositoryStub()
 }
+
+const makeFakeAccount = (): AccountModel => ({
+  id: 'any_id',
+  name: 'any_name',
+  email: 'any_email',
+  password: 'any_password'
+})
+
+const makeFakeAuthentication = (): AuthenticationModel => ({
+  email: 'any_email@mail.com',
+  password: 'any_password'
+})
 
 type SutTypes = {
   sut: DbAuthentication
@@ -35,10 +42,7 @@ describe('DbAuthentication UseCase', () => {
   it('should call LoadAccountByEmailRepository with correct email', async () => {
     const { sut, loadAccountByEmailRepositoryStub } = makeSut()
     const loadSpy = jest.spyOn(loadAccountByEmailRepositoryStub, 'load')
-    await sut.auth({
-      email: 'any_email@mail.com',
-      password: 'any_password'
-    })
+    await sut.auth(makeFakeAuthentication())
     expect(loadSpy).toHaveBeenCalledWith('any_email@mail.com')
   })
 })
