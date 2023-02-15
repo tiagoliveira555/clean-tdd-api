@@ -11,8 +11,8 @@ module.exports = {
   roots: [
     '<rootDir>/src'
   ],
-  preset: '@shelf/jest-mongodb',
   transform: {
     '\\.ts$': 'ts-jest'
-  }
+  },
+  preset: '@shelf/jest-mongodb'
 }
