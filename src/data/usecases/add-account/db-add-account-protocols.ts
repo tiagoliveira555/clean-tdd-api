@@ -1,4 +1,4 @@
-export * from '@/data/protocols/encrypter'
-export * from '@/data/protocols/add-account-repository'
+export * from '@/data/protocols/criptography'
+export * from '@/data/protocols/db'
 export * from '@/domain/models'
 export * from '@/domain/usecases'
