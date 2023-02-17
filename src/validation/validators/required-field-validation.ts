@@ -1,4 +1,4 @@
-import { Validation } from '../../protocols/validation'
+import { Validation } from '@/presentation/protocols/validation'
 import { MissingParamsError } from '@/presentation/errors'
 
 export class RequiredFieldValidation implements Validation {
