@@ -1,5 +1,5 @@
 import { DbAuthentication } from './db-authentication'
-import { LoadAccountByEmailRepository, UpdateAccessTokenRepository } from '@/data/protocols/db'
+import { LoadAccountByEmailRepository, UpdateAccessTokenRepository } from '@/data/protocols/db/account'
 import { HashCompare, TokenGenerate } from '@/data/protocols/criptography'
 import { AccountModel } from '@/domain/models'
 import { AuthenticationModel } from '@/domain/usecases/authentication'
