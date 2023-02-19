@@ -1,5 +1,5 @@
-import { makeSignUpController } from '@/main/factories/signup'
-import { makeLoginController } from '@/main/factories/login'
+import { makeSignUpController } from '@/main/factories/controllers/signup'
+import { makeLoginController } from '@/main/factories/controllers/login'
 import { adaptRoute } from '@/main/adapters/express-route-adapter'
 
 import { Router } from 'express'
