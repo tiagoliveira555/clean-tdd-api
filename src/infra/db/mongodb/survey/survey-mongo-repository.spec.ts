@@ -2,12 +2,14 @@ import { SurveyMongoRepository } from './survey-mongo-repository'
 import { MongoHelper } from '@/infra/db/mongodb/helpers'
 
 import { Collection } from 'mongodb'
+import MockDate from 'mockdate'
 
 describe('Survey Mongo Repository', () => {
   let surveyCollection: Collection
 
   beforeAll(async () => {
     await MongoHelper.connect(process.env.MONGO_URL)
+    MockDate.set(new Date())
   })
 
   beforeEach(async () => {
@@ -17,6 +19,7 @@ describe('Survey Mongo Repository', () => {
 
   afterAll(async () => {
     await MongoHelper.disconnect()
+    MockDate.reset()
   })
 
   const makeSut = (): SurveyMongoRepository => {
@@ -32,7 +35,8 @@ describe('Survey Mongo Repository', () => {
         answer: 'any_answer'
       }, {
         answer: 'other_answer'
-      }]
+      }],
+      date: new Date()
     })
     const survey = await surveyCollection.findOne({ question: 'any_question' })
     expect(survey).toBeTruthy()
