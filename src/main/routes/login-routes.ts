@@ -1,6 +1,6 @@
+import { adaptRoute } from '@/main/adapters'
 import { makeSignUpController } from '@/main/factories/controllers/signup'
 import { makeLoginController } from '@/main/factories/controllers/login'
-import { adaptRoute } from '@/main/adapters/express-route-adapter'
 
 import { Router } from 'express'
 

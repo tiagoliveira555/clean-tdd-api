@@ -1,5 +1,0 @@
-export * from '@/presentation/protocols'
-export * from '@/validation/protocols/email-validator'
-export * from '@/domain/usecases'
-export * from '@/domain/models'
-export * from '@/validation/validators'

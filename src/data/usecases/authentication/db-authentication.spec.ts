@@ -2,7 +2,7 @@ import { DbAuthentication } from './db-authentication'
 import { LoadAccountByEmailRepository, UpdateAccessTokenRepository } from '@/data/protocols/db/account'
 import { HashCompare, Encrypter } from '@/data/protocols/criptography'
 import { AccountModel } from '@/domain/models'
-import { AuthenticationModel } from '@/domain/usecases/authentication'
+import { AuthenticationModel } from '@/domain/usecases'
 
 const makeLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
   class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {

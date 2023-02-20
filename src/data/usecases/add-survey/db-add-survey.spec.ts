@@ -1,6 +1,6 @@
 import { DbAddSurvey } from './db-add-survey'
 import { AddSurveyRepository } from '@/data/protocols/db/survey'
-import { AddSurveyModel } from '../add-account/db-add-account-protocols'
+import { AddSurveyModel } from '@/domain/usecases'
 
 const makeAddSurveyRepository = (): AddSurveyRepository => {
   class AddSurveyRepositoryStub implements AddSurveyRepository {

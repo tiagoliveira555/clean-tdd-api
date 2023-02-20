@@ -1,4 +1,4 @@
-import { adaptRoute } from '@/main/adapters/express-route-adapter'
+import { adaptRoute } from '@/main/adapters'
 import { makeAddSurveyController } from '@/main/factories/controllers/survey'
 
 import { Router } from 'express'
