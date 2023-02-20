@@ -6,10 +6,29 @@ import request from 'supertest'
 import { Collection } from 'mongodb'
 import { sign } from 'jsonwebtoken'
 
-describe('Survey Routes', () => {
-  let surveyCollection: Collection
-  let accountCollection: Collection
+let surveyCollection: Collection
+let accountCollection: Collection
 
+const makeAccessToken = async (): Promise<string> => {
+  const res = await accountCollection.insertOne({
+    name: 'Tiago',
+    email: 'tiago2@gmail.com',
+    password: '123',
+    role: 'admin'
+  })
+  const account = await accountCollection.findOne(res.insertedId)
+  const accessToken = sign({ id: account._id.toHexString() }, env.jwtSecret)
+  await accountCollection.updateOne({
+    _id: account._id
+  }, {
+    $set: {
+      accessToken
+    }
+  })
+  return accessToken
+}
+
+describe('Survey Routes', () => {
   beforeAll(async () => {
     await MongoHelper.connect(process.env.MONGO_URL)
   })
@@ -42,21 +61,7 @@ describe('Survey Routes', () => {
     })
 
     it('should return 204 on add survey with valid accessToken', async () => {
-      const res = await accountCollection.insertOne({
-        name: 'Tiago',
-        email: 'tiago2@gmail.com',
-        password: '123',
-        role: 'admin'
-      })
-      const account = await accountCollection.findOne(res.insertedId)
-      const accessToken = sign({ id: account._id.toHexString() }, env.jwtSecret)
-      await accountCollection.updateOne({
-        _id: account._id
-      }, {
-        $set: {
-          accessToken
-        }
-      })
+      const accessToken = await makeAccessToken()
       await request(app)
         .post('/api/surveys')
         .set('x-access-token', accessToken)
@@ -81,20 +86,7 @@ describe('Survey Routes', () => {
     })
 
     it('should return 204 on load surveys is empty with valid accessToken', async () => {
-      const res = await accountCollection.insertOne({
-        name: 'Tiago',
-        email: 'tiago2@gmail.com',
-        password: '123'
-      })
-      const account = await accountCollection.findOne(res.insertedId)
-      const accessToken = sign({ id: account._id.toHexString() }, env.jwtSecret)
-      await accountCollection.updateOne({
-        _id: account._id
-      }, {
-        $set: {
-          accessToken
-        }
-      })
+      const accessToken = await makeAccessToken()
       await request(app)
         .get('/api/surveys')
         .set('x-access-token', accessToken)
@@ -112,20 +104,7 @@ describe('Survey Routes', () => {
         }],
         date: new Date()
       }])
-      const res = await accountCollection.insertOne({
-        name: 'Tiago',
-        email: 'tiago2@gmail.com',
-        password: '123'
-      })
-      const account = await accountCollection.findOne(res.insertedId)
-      const accessToken = sign({ id: account._id.toHexString() }, env.jwtSecret)
-      await accountCollection.updateOne({
-        _id: account._id
-      }, {
-        $set: {
-          accessToken
-        }
-      })
+      const accessToken = await makeAccessToken()
       await request(app)
         .get('/api/surveys')
         .set('x-access-token', accessToken)
