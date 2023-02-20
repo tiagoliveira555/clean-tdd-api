@@ -1,5 +1,5 @@
 import { adaptRoute } from '@/main/adapters'
-import { makeAddSurveyController } from '@/main/factories/controllers/survey'
+import { makeAddSurveyController } from '@/main/factories/controllers/survey/add-survey'
 
 import { Router } from 'express'
 
