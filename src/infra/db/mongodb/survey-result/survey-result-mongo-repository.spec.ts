@@ -5,7 +5,6 @@ import { Collection } from 'mongodb'
 import { AccountModel, SurveyModel } from '@/domain/models'
 
 let surveyCollection: Collection
-let surveyResultCollection: Collection
 let accountCollection: Collection
 
 const makeSut = (): SurveyResultMongoRepository => {
@@ -45,8 +44,6 @@ describe('Survey Result Mongo Repository', () => {
   beforeEach(async () => {
     surveyCollection = MongoHelper.getCollection('surveys')
     await surveyCollection.deleteMany({})
-    surveyResultCollection = MongoHelper.getCollection('surveyResults')
-    await surveyResultCollection.deleteMany({})
     accountCollection = MongoHelper.getCollection('accounts')
     await accountCollection.deleteMany({})
   })
