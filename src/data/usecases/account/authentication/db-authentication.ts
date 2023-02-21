@@ -1,6 +1,6 @@
 import { Encrypter, HashCompare } from '@/data/protocols/criptography'
 import { LoadAccountByEmailRepository, UpdateAccessTokenRepository } from '@/data/protocols/db/account'
-import { Authentication, AuthenticationModel } from '@/domain/usecases'
+import { Authentication, AuthenticationModel } from '@/domain/usecases/account'
 
 export class DbAuthentication implements Authentication {
   constructor (
