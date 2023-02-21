@@ -86,10 +86,10 @@ describe('Survey Mongo Repository', () => {
         }],
         date: new Date()
       })
-      const survey = await surveyCollection.findOne(res.insertedId)
       const sut = makeSut()
-      const surveyResult = await sut.loadById(survey._id.toHexString())
+      const surveyResult = await sut.loadById(res.insertedId.toHexString())
       expect(surveyResult).toBeTruthy()
+      expect(surveyResult.id).toBeTruthy()
     })
   })
 })
