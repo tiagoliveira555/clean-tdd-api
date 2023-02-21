@@ -6,7 +6,7 @@ import { ObjectId } from 'mongodb'
 
 export class SurveyResultMongoRepository implements SaveSurveyResultRespository {
   async save (data: SaveSurveyResultModel): Promise<SurveyResultModel> {
-    const surveyResultCollection = MongoHelper.getCollection('surveys')
+    const surveyResultCollection = MongoHelper.getCollection('surveyResults')
     const res = await surveyResultCollection.findOneAndUpdate({
       surveyId: new ObjectId(data.surveyId),
       accoundId: new ObjectId(data.accountId)
