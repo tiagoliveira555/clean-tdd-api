@@ -2,12 +2,12 @@ import { AuthMiddleware } from './auth-middleware'
 import { forbidden, ok, serverError } from '@/presentation/helpers/http'
 import { AccessDeniedError } from '@/presentation/errors'
 import { HttpRequest } from '@/presentation/protocols'
-import { LoadAccountByToken } from '@/domain/usecases/account'
+import { LoadAccountByToken, LoadAccountByTokenParams } from '@/domain/usecases/account'
 import { AccountModel } from '@/domain/models'
 
 const makeLoadAccountByToken = (): LoadAccountByToken => {
   class LoadAccountByTokenStub implements LoadAccountByToken {
-    async load (accessToken: string, role?: string): Promise<AccountModel> {
+    async load ({ accessToken, role }: LoadAccountByTokenParams): Promise<AccountModel> {
       return await Promise.resolve(makeFakeAccount())
     }
   }
@@ -53,7 +53,7 @@ describe('Auth Middleware', () => {
     const { sut, loadAccountByTokenStub } = makeSut(role)
     const loadSpy = jest.spyOn(loadAccountByTokenStub, 'load')
     await sut.handle(makeFakeRequest())
-    expect(loadSpy).toHaveBeenCalledWith('any_token', role)
+    expect(loadSpy).toHaveBeenCalledWith({ accessToken: 'any_token', role })
   })
 
   it('should return 403 if LoadAccountToken returns null', async () => {
