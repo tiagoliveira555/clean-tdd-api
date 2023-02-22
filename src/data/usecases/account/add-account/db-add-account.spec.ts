@@ -1,18 +1,8 @@
 import { DbAddAccount } from './db-add-account'
 import { Encrypter } from '@/data/protocols/criptography'
 import { AddAccountRepository, LoadAccountByEmailRepository } from '@/data/protocols/db/account'
-import { AccountModel } from '@/domain/models'
 import { mockAccountModel, mockAccountParams } from '@/domain/test'
-import { mockAddAccountRepository, mockEncrypter } from '@/data/test'
-
-const mockLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
-  class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
-    async loadByEmail (email: string): Promise<AccountModel> {
-      return await Promise.resolve(null)
-    }
-  }
-  return new LoadAccountByEmailRepositoryStub()
-}
+import { mockAddAccountRepository, mockEncrypter, mockLoadAccountByEmailRepository } from '@/data/test'
 
 type SutTypes = {
   sut: DbAddAccount
@@ -25,6 +15,7 @@ const makeSut = (): SutTypes => {
   const encrypterStub = mockEncrypter()
   const addAccountRepositoryStub = mockAddAccountRepository()
   const loadAccountByEmailRepositoryStub = mockLoadAccountByEmailRepository()
+  jest.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail').mockResolvedValue(null)
   const sut = new DbAddAccount(encrypterStub, addAccountRepositoryStub, loadAccountByEmailRepositoryStub)
   return {
     sut,
