@@ -1,40 +1,10 @@
 import { LoadSurveysController } from './load-surveys-controller'
 import { noContent, ok, serverError } from '@/presentation/helpers/http'
+import { mockLoadSurveys } from '@/presentation/test'
 import { LoadSurveys } from '@/domain/usecases/survey'
-import { SurveyModel } from '@/domain/models'
+import { mockSurveysModel } from '@/domain/test'
 
 import MockDate from 'mockdate'
-
-const makeLoadSurveys = (): LoadSurveys => {
-  class LoadSurveysStub implements LoadSurveys {
-    async load (): Promise<SurveyModel[]> {
-      return await Promise.resolve(makeFakeSurveys())
-    }
-  }
-  return new LoadSurveysStub()
-}
-
-const makeFakeSurveys = (): SurveyModel[] => {
-  return [{
-    id: 'any_id',
-    question: 'any_question',
-    answers: [{
-      image: 'any_image',
-      answer: 'any_answer'
-    }, {
-      answer: 'any_answer2'
-    }],
-    date: new Date()
-  }, {
-    id: 'other_id',
-    question: 'other_question',
-    answers: [{
-      image: 'other_image',
-      answer: 'other_answer'
-    }],
-    date: new Date()
-  }]
-}
 
 type SutTypes = {
   sut: LoadSurveysController
@@ -42,7 +12,7 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const loadSurveysStub = makeLoadSurveys()
+  const loadSurveysStub = mockLoadSurveys()
   const sut = new LoadSurveysController(loadSurveysStub)
   return {
     sut,
@@ -69,7 +39,7 @@ describe('LoadSurveys Controller', () => {
   it('should return 200 on success', async () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle({})
-    expect(httpResponse).toEqual(ok(makeFakeSurveys()))
+    expect(httpResponse).toEqual(ok(mockSurveysModel()))
   })
 
   it('should return 204 if LoadSurveys returns empty', async () => {
@@ -81,7 +51,7 @@ describe('LoadSurveys Controller', () => {
 
   it('should return 500 if LoadSurveys throws', async () => {
     const { sut, loadSurveysStub } = makeSut()
-    jest.spyOn(loadSurveysStub, 'load').mockReturnValueOnce(Promise.reject(new Error()))
+    jest.spyOn(loadSurveysStub, 'load').mockRejectedValueOnce(new Error())
     const httpResponse = await sut.handle({})
     expect(httpResponse).toEqual(serverError(new Error()))
   })
