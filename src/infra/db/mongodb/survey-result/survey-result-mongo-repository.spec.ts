@@ -1,10 +1,11 @@
 import { SurveyResultMongoRepository } from './survey-result-mongo-repository'
 import { MongoHelper } from '@/infra/db/mongodb/helpers'
 
-import { Collection } from 'mongodb'
+import { Collection, ObjectId } from 'mongodb'
 import { AccountModel, SurveyModel } from '@/domain/models'
 
 let surveyCollection: Collection
+let surveyResultCollection: Collection
 let accountCollection: Collection
 
 const makeSut = (): SurveyResultMongoRepository => {
@@ -44,6 +45,8 @@ describe('Survey Result Mongo Repository', () => {
   beforeEach(async () => {
     surveyCollection = MongoHelper.getCollection('surveys')
     await surveyCollection.deleteMany({})
+    surveyResultCollection = MongoHelper.getCollection('surveyResults')
+    await surveyResultCollection.deleteMany({})
     accountCollection = MongoHelper.getCollection('accounts')
     await accountCollection.deleteMany({})
   })
@@ -64,29 +67,32 @@ describe('Survey Result Mongo Repository', () => {
         date: new Date()
       })
       expect(surveyResult).toBeTruthy()
-      expect(surveyResult.id).toBeTruthy()
-      expect(surveyResult.answer).toBe(survey.answers[0].answer)
+      expect(surveyResult.surveyId).toEqual(survey.id.toString())
+      expect(surveyResult.answers[0].answer).toBe(survey.answers[0].answer)
+      expect(surveyResult.answers[0].count).toBe(1)
+      expect(surveyResult.answers[0].percent).toBe(100)
     })
 
     it('should save a survey result if its no new', async () => {
       const survey = await makeSurvey()
       const account = await makeAccount()
-      const sut = makeSut()
-      const saveResult1 = await sut.save({
-        surveyId: survey.id,
-        accountId: account.id,
+      await surveyResultCollection.insertOne({
+        surveyId: new ObjectId(survey.id),
+        accountId: new ObjectId(account.id),
         answer: survey.answers[0].answer,
         date: new Date()
       })
-      const surveyResul2 = await sut.save({
+      const sut = makeSut()
+      const surveyResult = await sut.save({
         surveyId: survey.id,
         accountId: account.id,
         answer: survey.answers[1].answer,
         date: new Date()
       })
-      expect(surveyResul2).toBeTruthy()
-      expect(surveyResul2.id).toEqual(saveResult1.id)
-      expect(surveyResul2.answer).toBe(survey.answers[1].answer)
+      expect(surveyResult).toBeTruthy()
+      expect(surveyResult.surveyId).toEqual(survey.id.toString())
+      expect(surveyResult.answers[0].answer).toBe(survey.answers[1].answer)
+      expect(surveyResult.answers[0].count).toBe(1)
     })
   })
 })
