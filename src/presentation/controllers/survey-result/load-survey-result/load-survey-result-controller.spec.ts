@@ -8,9 +8,9 @@ import { LoadSurveyById } from '@/domain/usecases/survey'
 
 const mockRequest = (): HttpRequest => ({
   params: {
-    surveyId: 'any_id'
+    surveyId: 'any_survey_id'
   },
-  accountId: 'any_id'
+  accountId: 'any_account_id'
 })
 
 type SutTypes = {
@@ -35,7 +35,7 @@ describe('LoadSurveyResult Controller', () => {
     const { sut, loadSurveyByIdStub } = makeSut()
     const loadByIdSpy = jest.spyOn(loadSurveyByIdStub, 'loadById')
     await sut.handle(mockRequest())
-    expect(loadByIdSpy).toHaveBeenCalledWith('any_id')
+    expect(loadByIdSpy).toHaveBeenCalledWith('any_survey_id')
   })
 
   it('should return 403 if LoadSurveyById returns null', async () => {
@@ -50,5 +50,12 @@ describe('LoadSurveyResult Controller', () => {
     jest.spyOn(loadSurveyByIdStub, 'loadById').mockRejectedValueOnce(new Error())
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
+  it('should call LoadSurveyResult with correct values', async () => {
+    const { sut, loadSurveyResultStub } = makeSut()
+    const loadSpy = jest.spyOn(loadSurveyResultStub, 'load')
+    await sut.handle(mockRequest())
+    expect(loadSpy).toHaveBeenCalledWith('any_survey_id', 'any_account_id')
   })
 })
