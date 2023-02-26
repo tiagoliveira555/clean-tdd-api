@@ -1,10 +1,10 @@
 import { DbLoadSurveyResult } from './db-load-survey-result'
 import { LoadSurveyResultRespository } from '@/data/protocols/db/survey-result'
+import { LoadSurveyByIdRepository } from '@/data/protocols/db/survey'
 import { mockLoadSurveyByIdRepository, mockLoadSurveyResultRepository } from '@/data/test'
 import { mockSurveyResultModel } from '@/domain/test'
 
 import MockDate from 'mockdate'
-import { LoadSurveyByIdRepository } from '@/data/protocols/db/survey'
 
 type SutTypes = {
   sut: DbLoadSurveyResult
