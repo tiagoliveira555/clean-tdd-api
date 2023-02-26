@@ -7,6 +7,8 @@ import { LoadSurveyResult } from '@/domain/usecases/survey-result'
 import { LoadSurveyById } from '@/domain/usecases/survey'
 import { mockSurveyResultModel } from '@/domain/test'
 
+import MockDate from 'mockdate'
+
 const mockRequest = (): HttpRequest => ({
   params: {
     surveyId: 'any_survey_id'
@@ -32,6 +34,14 @@ const makeSut = (): SutTypes => {
 }
 
 describe('LoadSurveyResult Controller', () => {
+  beforeAll(() => {
+    MockDate.set(new Date())
+  })
+
+  afterAll(() => {
+    MockDate.reset()
+  })
+
   it('should call LoadSurveyById with correct id', async () => {
     const { sut, loadSurveyByIdStub } = makeSut()
     const loadByIdSpy = jest.spyOn(loadSurveyByIdStub, 'loadById')
