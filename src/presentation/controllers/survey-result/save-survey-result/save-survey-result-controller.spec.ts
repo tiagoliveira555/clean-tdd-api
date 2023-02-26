@@ -14,7 +14,7 @@ const mockRequest = (): HttpRequest => ({
     surveyId: 'any_survey_id'
   },
   body: {
-    answer: 'any_answer'
+    answer: 'any_answer_1'
   },
   accountId: 'any_account_id'
 })
@@ -87,7 +87,7 @@ describe('SaveSurveyResult Controller', () => {
     expect(saveSpy).toHaveBeenCalledWith({
       surveyId: 'any_survey_id',
       accountId: 'any_account_id',
-      answer: 'any_answer',
+      answer: 'any_answer_1',
       date: new Date()
     })
   })

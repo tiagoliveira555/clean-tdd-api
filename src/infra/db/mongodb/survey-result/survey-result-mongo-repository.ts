@@ -6,11 +6,11 @@ import { ObjectId } from 'mongodb'
 import round from 'mongo-round'
 
 export class SurveyResultMongoRepository implements SaveSurveyResultRespository, LoadSurveyResultRespository {
-  async save (data: SaveSurveyResultParams): Promise<SurveyResultModel> {
+  async save (data: SaveSurveyResultParams): Promise<void> {
     const surveyResultCollection = MongoHelper.getCollection('surveyResults')
     await surveyResultCollection.findOneAndUpdate({
       surveyId: new ObjectId(data.surveyId),
-      accoundId: new ObjectId(data.accountId)
+      accountId: new ObjectId(data.accountId)
     }, {
       $set: {
         answer: data.answer,
@@ -19,8 +19,6 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRespository,
     }, {
       upsert: true
     })
-    const surveyResult = await this.loadBySurveyId(data.surveyId, data.accountId)
-    return surveyResult
   }
 
   async loadBySurveyId (surveyId: string, accountId: string): Promise<SurveyResultModel> {
