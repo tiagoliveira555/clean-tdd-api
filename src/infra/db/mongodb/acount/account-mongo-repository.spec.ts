@@ -1,6 +1,6 @@
 import { AccountMongoRepository } from './account-mongo-repository'
 import { MongoHelper } from '@/infra/db/mongodb/helpers'
-import { mockAccountParams } from '@/domain/test'
+import { mockAccountParams } from '@/domain/mock'
 
 import { Collection } from 'mongodb'
 
@@ -27,25 +27,27 @@ describe('Account Mongo Repository', () => {
   describe('add()', () => {
     it('should return an account on add success', async () => {
       const sut = makeSut()
-      const account = await sut.add(mockAccountParams())
+      const params = mockAccountParams()
+      const account = await sut.add(params)
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()
-      expect(account.name).toBe('any_name')
-      expect(account.email).toBe('any_email@mail.com')
-      expect(account.password).toBe('any_password')
+      expect(account.name).toBe(params.name)
+      expect(account.email).toBe(params.email)
+      expect(account.password).toBe(params.password)
     })
   })
 
   describe('loadByEmail()', () => {
     it('should return an account on loadByEmail success', async () => {
       const sut = makeSut()
-      await accountCollection.insertOne(mockAccountParams())
-      const account = await sut.loadByEmail('any_email@mail.com')
+      const params = mockAccountParams()
+      await accountCollection.insertOne(params)
+      const account = await sut.loadByEmail(params.email)
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()
-      expect(account.name).toBe('any_name')
-      expect(account.email).toBe('any_email@mail.com')
-      expect(account.password).toBe('any_password')
+      expect(account.name).toBe(params.name)
+      expect(account.email).toBe(params.email)
+      expect(account.password).toBe(params.password)
     })
 
     it('should return null if loadByEmail fails', async () => {
