@@ -5,6 +5,7 @@ import { forbidden, ok, serverError } from '@/presentation/helpers/http'
 import { LoadSurveyByIdSpy, SaveSurveyResultSpy } from '@/presentation/mock'
 
 import { faker } from '@faker-js/faker'
+import MockDate from 'mockdate'
 
 const mockRequest = (answer: string = null): HttpRequest => {
   return {
@@ -36,6 +37,14 @@ const makeSut = (): SutTypes => {
 }
 
 describe('SaveSurveyResult Controller', () => {
+  beforeAll(() => {
+    MockDate.set(new Date())
+  })
+
+  afterAll(() => {
+    MockDate.reset()
+  })
+
   it('should call LoadSurveyById with correct id', async () => {
     const { sut, loadSurveyByIdSpy } = makeSut()
     const request = mockRequest()
