@@ -35,7 +35,7 @@ describe('Login Controller', () => {
     const { sut, authenticationSpy } = makeSut()
     const request = mockRequest()
     await sut.handle(request)
-    expect(authenticationSpy.authenticatinParams).toEqual({
+    expect(authenticationSpy.authenticationParams).toEqual({
       email: request.body.email,
       password: request.body.password
     })
@@ -43,7 +43,7 @@ describe('Login Controller', () => {
 
   it('should return 401 if invalid credentials are provided', async () => {
     const { sut, authenticationSpy } = makeSut()
-    authenticationSpy.token = null
+    authenticationSpy.authenticationModel = null
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(unauthorized())
   })
@@ -58,7 +58,7 @@ describe('Login Controller', () => {
   it('should return 200 if valid credentials are provided', async () => {
     const { sut, authenticationSpy } = makeSut()
     const httpResponse = await sut.handle(mockRequest())
-    expect(httpResponse).toEqual(ok({ accessToken: authenticationSpy.token }))
+    expect(httpResponse).toEqual(ok(authenticationSpy.authenticationModel))
   })
 
   it('should call Validation with correct value', async () => {
