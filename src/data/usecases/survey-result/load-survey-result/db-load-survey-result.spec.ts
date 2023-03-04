@@ -59,7 +59,7 @@ describe('DbLoadSurveyResult UseCase', () => {
       surveyId,
       question: surveyModel.question,
       date: surveyModel.date,
-      answers: surveyModel.answers.map(answer => ({ ...answer, count: 0, percent: 0 }))
+      answers: surveyModel.answers.map(answer => ({ ...answer, count: 0, percent: 0, isCurrentAccountAnswer: false }))
     })
   })
 

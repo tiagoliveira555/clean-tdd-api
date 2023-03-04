@@ -11,20 +11,23 @@ export const mockSaveSurveyResultParams = (): SaveSurveyResultParams => ({
 
 export const mockSurveyResultModel = (): SurveyResultModel => ({
   surveyId: faker.datatype.uuid(),
-  question: faker.random.word(),
+  question: faker.random.words(),
   answers: [{
     image: faker.internet.url(),
     answer: faker.random.word(),
-    count: 0,
-    percent: 0
+    count: faker.datatype.number({ min: 0, max: 100 }),
+    percent: faker.datatype.number({ min: 0, max: 100 }),
+    isCurrentAccountAnswer: faker.datatype.boolean()
   }, {
     answer: faker.random.word(),
-    count: 0,
-    percent: 0
+    count: faker.datatype.number({ min: 0, max: 100 }),
+    percent: faker.datatype.number({ min: 0, max: 100 }),
+    isCurrentAccountAnswer: faker.datatype.boolean()
   }, {
     answer: faker.random.word(),
-    count: 0,
-    percent: 0
+    count: faker.datatype.number({ min: 0, max: 100 }),
+    percent: faker.datatype.number({ min: 0, max: 100 }),
+    isCurrentAccountAnswer: faker.datatype.boolean()
   }],
   date: faker.date.recent()
 })
