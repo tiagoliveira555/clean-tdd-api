@@ -1,7 +1,6 @@
 import { adaptRoute } from '@/main/adapters'
 import { adminAuth, auth } from '@/main/factories/middlewares'
-import { makeAddSurveyController } from '@/main/factories/controllers/survey/add-survey'
-import { makeLoadSurveysController } from '@/main/factories/controllers/survey/loadSurveys'
+import { makeAddSurveyController, makeLoadSurveysController } from '@/main/factories/controllers'
 
 import { Router } from 'express'
 

@@ -9,6 +9,7 @@
     "postbuild": "copyfiles -u 1 public/**/* dist/static",
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
+    "check": "npm-check -s -u",
     "test": "jest --passWithNoTests --silent --noStackTrace --no-cache --runInBand",
     "test:verbose": "jest --passWithNoTests --no-cache --runInBand",
     "test:watch": "npm test -- --watch -c jest-unit-config.js",

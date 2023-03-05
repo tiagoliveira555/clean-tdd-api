@@ -1,5 +1,4 @@
-import { makeSaveSurveyResultController } from '@/main/factories/controllers/survey-result/save-survey-result'
-import { makeLoadSurveyResultController } from '../factories/controllers/survey-result/load-survey-result'
+import { makeSaveSurveyResultController, makeLoadSurveyResultController } from '@/main/factories/controllers'
 import { adaptRoute } from '@/main/adapters'
 import { auth } from '@/main/factories/middlewares'
 
