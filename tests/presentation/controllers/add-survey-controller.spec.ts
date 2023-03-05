@@ -1,20 +1,16 @@
 import { AddSurveyController } from '@/presentation/controllers'
 import { badRequest, noContent, serverError } from '@/presentation/helpers/http'
-import { HttpRequest } from '@/presentation/protocols'
 import { AddSurveySpy, ValidationSpy } from '@/tests/presentation/mocks'
 
 import { faker } from '@faker-js/faker'
 import MockDate from 'mockdate'
 
-const mockRequest = (): HttpRequest => ({
-  body: {
-    question: faker.random.word(),
-    answers: [{
-      image: faker.internet.url(),
-      answer: faker.random.word()
-    }],
-    date: new Date()
-  }
+const mockInput = (): AddSurveyController.Input => ({
+  question: faker.random.word(),
+  answers: [{
+    image: faker.internet.url(),
+    answer: faker.random.word()
+  }]
 })
 
 type SutTypes = {
@@ -45,39 +41,38 @@ describe('AddSurvey Controller', () => {
 
   it('should call Validation with correct values', async () => {
     const { sut, validationSpy } = makeSut()
-    const request = mockRequest()
-    await sut.handle(request)
+    const input = mockInput()
+    await sut.handle(input)
     expect(validationSpy.input).toEqual({
-      question: request.body.question,
-      answers: request.body.answers,
-      date: request.body.date
+      question: input.question,
+      answers: input.answers
     })
   })
 
   it('should return 400 if Validation fails', async () => {
     const { sut, validationSpy } = makeSut()
     jest.spyOn(validationSpy, 'validate').mockReturnValueOnce(new Error())
-    const httpResponse = await sut.handle(mockRequest())
-    expect(httpResponse).toEqual(badRequest(new Error()))
+    const output = await sut.handle(mockInput())
+    expect(output).toEqual(badRequest(new Error()))
   })
 
   it('should call AddSurvey with correct values', async () => {
     const { sut, addSurveySpy } = makeSut()
-    const request = mockRequest()
-    await sut.handle(request)
-    expect(addSurveySpy.data).toEqual(request.body)
+    const input = mockInput()
+    await sut.handle(input)
+    expect(addSurveySpy.data).toEqual({ ...input, date: new Date() })
   })
 
   it('should return 500 if AddSurvey twrows', async () => {
     const { sut, addSurveySpy } = makeSut()
     jest.spyOn(addSurveySpy, 'add').mockRejectedValueOnce(new Error())
-    const httpResponse = await sut.handle(mockRequest())
-    expect(httpResponse).toEqual(serverError(new Error()))
+    const output = await sut.handle(mockInput())
+    expect(output).toEqual(serverError(new Error()))
   })
 
   it('should return 204 on success', async () => {
     const { sut } = makeSut()
-    const httpResponse = await sut.handle(mockRequest())
-    expect(httpResponse).toEqual(noContent())
+    const output = await sut.handle(mockInput())
+    expect(output).toEqual(noContent())
   })
 })

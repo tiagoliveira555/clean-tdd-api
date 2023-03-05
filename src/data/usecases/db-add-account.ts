@@ -1,7 +1,6 @@
 import { Encrypter } from '@/data/protocols/criptography'
 import { AddAccountRepository, LoadAccountByEmailRepository } from '@/data/protocols/db/account'
-import { AccountModel } from '@/domain/models'
-import { AddAccount, AddAccountParams } from '@/domain/usecases'
+import { AddAccount } from '@/domain/usecases'
 
 export class DbAddAccount implements AddAccount {
   constructor (
@@ -10,13 +9,13 @@ export class DbAddAccount implements AddAccount {
     private readonly loadAccountByEmailRepository: LoadAccountByEmailRepository
   ) {}
 
-  async add (accountData: AddAccountParams): Promise<AccountModel> {
-    const account = await this.loadAccountByEmailRepository.loadByEmail(accountData.email)
+  async add (input: AddAccount.Input): Promise<AddAccount.Output> {
+    const account = await this.loadAccountByEmailRepository.loadByEmail(input.email)
+    let isValid = false
     if (!account) {
-      const hashedPassword = await this.encrypter.encrypt(accountData.password)
-      const newAccount = await this.addAccountRepository.add({ ...accountData, password: hashedPassword })
-      return newAccount
+      const hashedPassword = await this.encrypter.encrypt(input.password)
+      isValid = await this.addAccountRepository.add({ ...input, password: hashedPassword })
     }
-    return null
+    return isValid
   }
 }

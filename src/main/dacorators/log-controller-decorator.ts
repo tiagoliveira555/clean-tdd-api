@@ -1,4 +1,4 @@
-import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
+import { Controller, Output } from '@/presentation/protocols'
 import { LogErrorRepository } from '@/data/protocols/db/log'
 
 export class LogControllerDecorator implements Controller {
@@ -7,8 +7,8 @@ export class LogControllerDecorator implements Controller {
     private readonly logErrorRepository: LogErrorRepository
   ) {}
 
-  async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-    const httpResponse = await this.controller.handle(httpRequest)
+  async handle (input: any): Promise<Output> {
+    const httpResponse = await this.controller.handle(input)
     if (httpResponse.statusCode === 500) {
       await this.logErrorRepository.logError(httpResponse.body.stack)
     }

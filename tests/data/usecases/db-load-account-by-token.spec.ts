@@ -45,13 +45,12 @@ describe('DbLoadAccountByToken UseCase', () => {
   it('should call LoadAccountByTokenRepository with correct values', async () => {
     const { sut, loadAccountByTokenRepositorySpy } = makeSut()
     await sut.load({ accessToken: token, role })
-    expect(loadAccountByTokenRepositorySpy.token).toBe(token)
-    expect(loadAccountByTokenRepositorySpy.role).toBe(role)
+    expect(loadAccountByTokenRepositorySpy.input).toEqual({ accessToken: token, role })
   })
 
   it('should return null if LoadAccountByTokenRepository returns null', async () => {
     const { sut, loadAccountByTokenRepositorySpy } = makeSut()
-    jest.spyOn(loadAccountByTokenRepositorySpy, 'loadByToken').mockReturnValueOnce(Promise.resolve(null))
+    loadAccountByTokenRepositorySpy.result = null
     const account = await sut.load({ accessToken: token, role })
     expect(account).toBeNull()
   })
@@ -59,7 +58,7 @@ describe('DbLoadAccountByToken UseCase', () => {
   it('should return an account on success', async () => {
     const { sut, loadAccountByTokenRepositorySpy } = makeSut()
     const account = await sut.load({ accessToken: token, role })
-    expect(account).toEqual(loadAccountByTokenRepositorySpy.accountModel)
+    expect(account).toEqual(loadAccountByTokenRepositorySpy.result)
   })
 
   it('should return null if Decrypter throws', async () => {
@@ -72,7 +71,7 @@ describe('DbLoadAccountByToken UseCase', () => {
   it('should throw if LoadAccountByTokenRepository throws', async () => {
     const { sut, loadAccountByTokenRepositorySpy } = makeSut()
     jest.spyOn(loadAccountByTokenRepositorySpy, 'loadByToken').mockRejectedValueOnce(new Error())
-    const promise = sut.load({ accessToken: 'any_token', role: 'any_role' })
+    const promise = sut.load({ accessToken: token, role })
     await expect(promise).rejects.toThrow()
   })
 })

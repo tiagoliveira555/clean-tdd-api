@@ -1,4 +1,4 @@
-import { Controller, HttpRequest, HttpResponse, Validation } from '@/presentation/protocols'
+import { Controller, Output, Validation } from '@/presentation/protocols'
 import { badRequest, ok, serverError, unauthorized } from '@/presentation/helpers/http'
 import { Authentication } from '@/domain/usecases'
 
@@ -8,13 +8,13 @@ export class LoginController implements Controller {
     private readonly validation: Validation
   ) {}
 
-  async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
+  async handle (input: LoginController.Input): Promise<Output> {
     try {
-      const error = this.validation.validate(httpRequest.body)
+      const error = this.validation.validate(input)
       if (error) {
         return badRequest(error)
       }
-      const { email, password } = httpRequest.body
+      const { email, password } = input
       const authenticationModel = await this.authentication.auth({
         email,
         password
@@ -26,5 +26,12 @@ export class LoginController implements Controller {
     } catch (error) {
       return serverError(error)
     }
+  }
+}
+
+export namespace LoginController {
+  export type Input = {
+    email: string
+    password: string
   }
 }

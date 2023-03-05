@@ -1,11 +1,4 @@
-export interface HttpRequest {
-  body?: any
-  headers?: any
-  params?: any
-  accountId?: any
-}
-
-export interface HttpResponse {
+export interface Output {
   statusCode: number
   body: any
 }

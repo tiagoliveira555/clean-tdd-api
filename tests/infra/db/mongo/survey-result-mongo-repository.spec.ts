@@ -1,5 +1,5 @@
 import { MongoHelper, SurveyResultMongoRepository } from '@/infra/db/mongodb'
-import { mockAddSurveyParams, mockAccountParams } from '@/tests/domain/mocks'
+import { mockAddSurveyParams, mockAccountInput } from '@/tests/domain/mocks'
 import { SurveyModel } from '@/domain/models'
 
 import { Collection, ObjectId } from 'mongodb'
@@ -19,7 +19,7 @@ const makeSurvey = async (): Promise<SurveyModel> => {
 }
 
 const makeAccountId = async (): Promise<string> => {
-  const res = await accountCollection.insertOne(mockAccountParams())
+  const res = await accountCollection.insertOne(mockAccountInput())
   return res.insertedId.toHexString()
 }
 

@@ -1,5 +1,5 @@
 import { MongoHelper, AccountMongoRepository } from '@/infra/db/mongodb'
-import { mockAccountParams } from '@/tests/domain/mocks'
+import { mockAccountInput } from '@/tests/domain/mocks'
 
 import { Collection } from 'mongodb'
 import { faker } from '@faker-js/faker'
@@ -27,26 +27,21 @@ describe('Account Mongo Repository', () => {
   describe('add()', () => {
     it('should return an account on add success', async () => {
       const sut = makeSut()
-      const params = mockAccountParams()
-      const account = await sut.add(params)
-      expect(account).toBeTruthy()
-      expect(account.id).toBeTruthy()
-      expect(account.name).toBe(params.name)
-      expect(account.email).toBe(params.email)
-      expect(account.password).toBe(params.password)
+      const params = mockAccountInput()
+      const isValid = await sut.add(params)
+      expect(isValid).toBe(true)
     })
   })
 
   describe('loadByEmail()', () => {
     it('should return an account on loadByEmail success', async () => {
       const sut = makeSut()
-      const params = mockAccountParams()
+      const params = mockAccountInput()
       await accountCollection.insertOne(params)
       const account = await sut.loadByEmail(params.email)
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()
       expect(account.name).toBe(params.name)
-      expect(account.email).toBe(params.email)
       expect(account.password).toBe(params.password)
     })
 
@@ -60,7 +55,7 @@ describe('Account Mongo Repository', () => {
   describe('updateAccessToken()', () => {
     it('should update the account accessToken on updateAccessToken success', async () => {
       const sut = makeSut()
-      const res = await accountCollection.insertOne(mockAccountParams())
+      const res = await accountCollection.insertOne(mockAccountInput())
       const account = await accountCollection.findOne(res.insertedId)
       expect(account.accessToken).toBeFalsy()
       await sut.updateAccessToken(account._id.toHexString(), 'any_token')
@@ -91,12 +86,9 @@ describe('Account Mongo Repository', () => {
         password,
         accessToken
       })
-      const account = await sut.loadByToken(accessToken)
+      const account = await sut.loadByToken({ accessToken })
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()
-      expect(account.name).toBe(name)
-      expect(account.email).toBe(email)
-      expect(account.password).toBe(password)
     })
 
     it('should return an account on loadByToken with admin role', async () => {
@@ -108,12 +100,9 @@ describe('Account Mongo Repository', () => {
         accessToken,
         role: 'admin'
       })
-      const account = await sut.loadByToken(accessToken, 'admin')
+      const account = await sut.loadByToken({ accessToken, role: 'admin' })
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()
-      expect(account.name).toBe(name)
-      expect(account.email).toBe(email)
-      expect(account.password).toBe(password)
     })
 
     it('should return null on loadByToken with invalid role', async () => {
@@ -124,7 +113,7 @@ describe('Account Mongo Repository', () => {
         password,
         accessToken
       })
-      const account = await sut.loadByToken(accessToken, 'admin')
+      const account = await sut.loadByToken({ accessToken, role: 'admin' })
       expect(account).toBeFalsy()
     })
 
@@ -137,17 +126,14 @@ describe('Account Mongo Repository', () => {
         accessToken,
         role: 'admin'
       })
-      const account = await sut.loadByToken(accessToken)
+      const account = await sut.loadByToken({ accessToken })
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()
-      expect(account.name).toBe(name)
-      expect(account.email).toBe(email)
-      expect(account.password).toBe(password)
     })
 
     it('should return null if loadByToken fails', async () => {
       const sut = makeSut()
-      const account = await sut.loadByToken(accessToken)
+      const account = await sut.loadByToken({ accessToken })
       expect(account).toBeFalsy()
     })
   })

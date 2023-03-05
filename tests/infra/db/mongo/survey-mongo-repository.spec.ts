@@ -1,5 +1,5 @@
 import { MongoHelper, SurveyMongoRepository } from '@/infra/db/mongodb'
-import { mockAccountParams, mockAddSurveyParams } from '@/tests/domain/mocks'
+import { mockAccountInput, mockAddSurveyParams } from '@/tests/domain/mocks'
 
 import { Collection, ObjectId } from 'mongodb'
 
@@ -11,7 +11,7 @@ let surveyResultCollection: Collection
 let accountCollection: Collection
 
 const makeAccountId = async (): Promise<string> => {
-  const res = await accountCollection.insertOne(mockAccountParams())
+  const res = await accountCollection.insertOne(mockAccountInput())
   return res.insertedId.toHexString()
 }
 

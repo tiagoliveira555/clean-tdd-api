@@ -1,16 +1,15 @@
-import { Authentication, AuthenticationParams, AddAccount, AddAccountParams, LoadAccountByToken, LoadAccountByTokenParams } from '@/domain/usecases'
-import { AccountModel, AuthenticationModel } from '@/domain/models'
-import { mockAccountModel } from '@/tests/domain/mocks'
+import { Authentication, AuthenticationParams, AddAccount, LoadAccountByToken } from '@/domain/usecases'
+import { AuthenticationModel } from '@/domain/models'
 
 import { faker } from '@faker-js/faker'
 
 export class AddAccountSpy implements AddAccount {
-  account: AddAccountParams
-  accountModel = mockAccountModel()
+  input: AddAccount.Input
+  result = true
 
-  async add (account: AddAccountParams): Promise<AccountModel> {
-    this.account = account
-    return this.accountModel
+  async add (input: AddAccount.Input): Promise<AddAccount.Output> {
+    this.input = input
+    return this.result
   }
 }
 
@@ -28,11 +27,13 @@ export class AuthenticationSpy implements Authentication {
 }
 
 export class LoadAccountByTokenSpy implements LoadAccountByToken {
-  loadAccountByTokenParams: LoadAccountByTokenParams
-  accountModel = mockAccountModel()
+  input: LoadAccountByToken.Input
+  result = {
+    id: faker.datatype.uuid()
+  }
 
-  async load (loadAccountByTokenParams: LoadAccountByTokenParams): Promise<AccountModel> {
-    this.loadAccountByTokenParams = loadAccountByTokenParams
-    return await Promise.resolve(this.accountModel)
+  async load (input: LoadAccountByToken.Input): Promise<LoadAccountByToken.Output> {
+    this.input = input
+    return await Promise.resolve(this.result)
   }
 }

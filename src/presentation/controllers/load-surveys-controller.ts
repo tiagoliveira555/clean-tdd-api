@@ -1,4 +1,4 @@
-import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
+import { Controller, Output } from '@/presentation/protocols'
 import { noContent, ok, serverError } from '@/presentation/helpers/http'
 import { LoadSurveys } from '@/domain/usecases'
 
@@ -7,12 +7,18 @@ export class LoadSurveysController implements Controller {
     private readonly loadSurveys: LoadSurveys
   ) {}
 
-  async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
+  async handle (input: LoadSurveysController.Input): Promise<Output> {
     try {
-      const surveys = await this.loadSurveys.load(httpRequest.accountId)
+      const surveys = await this.loadSurveys.load(input.accountId)
       return surveys.length ? ok(surveys) : noContent()
     } catch (error) {
       return serverError(error)
     }
+  }
+}
+
+export namespace LoadSurveysController {
+  export type Input = {
+    accountId: string
   }
 }
