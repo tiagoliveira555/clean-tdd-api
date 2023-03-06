@@ -1,9 +1,9 @@
-import { AddSurveyParams } from '@/domain/usecases'
 import { SurveyModel } from '@/domain/models'
 
 import { faker } from '@faker-js/faker'
+import { AddSurvey } from '../usecases'
 
-export const mockAddSurveyParams = (): AddSurveyParams => ({
+export const mockAddSurveyParams = (): AddSurvey.Input => ({
   question: faker.random.word(),
   answers: [{
     image: faker.internet.url(),

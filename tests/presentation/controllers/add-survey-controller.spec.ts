@@ -60,7 +60,7 @@ describe('AddSurvey Controller', () => {
     const { sut, addSurveySpy } = makeSut()
     const input = mockInput()
     await sut.handle(input)
-    expect(addSurveySpy.data).toEqual({ ...input, date: new Date() })
+    expect(addSurveySpy.input).toEqual({ ...input, date: new Date() })
   })
 
   it('should return 500 if AddSurvey twrows', async () => {
