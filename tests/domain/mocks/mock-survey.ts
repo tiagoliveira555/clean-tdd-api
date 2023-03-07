@@ -10,8 +10,6 @@ export const mockAddSurveyParams = (): AddSurvey.Input => ({
     answer: faker.random.word()
   }, {
     answer: faker.random.word()
-  }, {
-    answer: faker.random.word()
   }],
   date: faker.date.recent()
 })
