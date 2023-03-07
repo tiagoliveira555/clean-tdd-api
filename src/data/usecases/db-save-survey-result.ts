@@ -1,6 +1,5 @@
 import { LoadSurveyResultRespository, SaveSurveyResultRespository } from '@/data/protocols/db/survey-result'
-import { SurveyResultModel } from '@/domain/models'
-import { SaveSurveyResult, SaveSurveyResultParams } from '@/domain/usecases'
+import { SaveSurveyResult } from '@/domain/usecases'
 
 export class DbSaveSurveyResult implements SaveSurveyResult {
   constructor (
@@ -8,8 +7,8 @@ export class DbSaveSurveyResult implements SaveSurveyResult {
     private readonly loadSurveyResultRespository: LoadSurveyResultRespository
   ) {}
 
-  async save (data: SaveSurveyResultParams): Promise<SurveyResultModel> {
-    await this.saveSurveyResultRespository.save(data)
-    return await this.loadSurveyResultRespository.loadBySurveyId(data.surveyId, data.accountId)
+  async save (input: SaveSurveyResult.Input): Promise<SaveSurveyResult.Output> {
+    await this.saveSurveyResultRespository.save(input)
+    return await this.loadSurveyResultRespository.loadBySurveyId(input.surveyId, input.accountId)
   }
 }
