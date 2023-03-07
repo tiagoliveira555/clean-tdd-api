@@ -74,12 +74,34 @@ describe('Survey Mongo Repository', () => {
   })
 
   describe('loadById()', () => {
-    it('should loadById surveyResult on success', async () => {
+    it('should load survey by id on success', async () => {
       const res = await surveyCollection.insertOne(mockAddSurveyParams())
       const sut = makeSut()
-      const surveyResult = await sut.loadById(res.insertedId.toHexString())
-      expect(surveyResult).toBeTruthy()
-      expect(surveyResult.id).toBeTruthy()
+      const survey = await sut.loadById(res.insertedId.toHexString())
+      expect(survey).toBeTruthy()
+      expect(survey.id).toBeTruthy()
+    })
+
+    it('should return null if survey does not exists', async () => {
+      const sut = makeSut()
+      const survey = await sut.loadById(new FakerObjectId().toHexString())
+      expect(survey).toBeFalsy()
+    })
+  })
+
+  describe('loadAnswers()', () => {
+    it('should load answers on success', async () => {
+      const res = await surveyCollection.insertOne(mockAddSurveyParams())
+      const survey = await surveyCollection.findOne(res.insertedId)
+      const sut = makeSut()
+      const answers = await sut.loadAnswers(survey._id.toHexString())
+      expect(answers).toEqual([survey.answers[0].answer, survey.answers[1].answer])
+    })
+
+    it('should return empty array if survey does not exists', async () => {
+      const sut = makeSut()
+      const answers = await sut.loadAnswers(new FakerObjectId().toHexString())
+      expect(answers).toEqual([])
     })
   })
 
